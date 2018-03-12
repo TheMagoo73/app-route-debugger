@@ -1,0 +1,68 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+
+<dom-module id="app-route-debugger">
+  <template>
+
+    <paper-toast id="toast">
+      <div>Route: {{__displayRoute}}</div>
+      <div>Data: {{__displayRouteData}}</div>
+    </paper-toast>
+
+  </template>
+
+  <script>
+    /**
+     * `app-route-debugger`
+     * A debugger for PolyemerElement/app-route element
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class AppRouteDebugger extends Polymer.Element {
+      static get is() { return 'app-route-debugger'; }
+      static get properties() {
+        return {
+          route: Object,
+          routeData: Object,
+          isEnabled: {
+            type: Boolean,
+            value: false
+          },
+          __displayRoute: {
+            type: String,
+            computed: '__getDisplayRoute(route)'
+          },
+          __displayRouteData: {
+            type: String,
+            computed: '__getDisplayRouteData(routeData)'
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '__routingChanged(route, routeData, isEnabled)'
+        ];
+      }
+
+      __routingChanged(route, routeData, enabled) {
+        if(enabled)
+          this.$.toast.show();
+        else if(this.$.toast.opened)
+          this.$.toast.hide();
+      }
+
+      __getDisplayRoute(route) {
+        return JSON.stringify(route, null, 2);
+      }
+
+      __getDisplayRouteData(routeData) {
+        return JSON.stringify(routeData, null, 2);
+      }
+    }
+
+    window.customElements.define(AppRouteDebugger.is, AppRouteDebugger);
+  </script>
+</dom-module>
